@@ -17,6 +17,11 @@ void init()
 
 void drawSun(Quad* sun, const float time)
 {
+	/* move sun a bit on the right */
+	mat4 translation = mat4::Identity();
+	translation(0,3) = 0.2; /* x-axis translation */
+	translation(1,3) = 0; /* y-axis translation */
+
 	/* rotation on itself */
 	const float sunRotationSpeed = 0.3;
 	mat4 rotation = mat4::Identity();
@@ -40,7 +45,7 @@ void drawSun(Quad* sun, const float time)
 	scale(0,0) = basicScale * ((scaleVariance * cosf(scaleSpeed * time)) + 1);
 	scale(1,1) = basicScale * ((scaleVariance * cosf(scaleSpeed * time)) + 1);;
 
-	const mat4 M = scale * rotation;
+	const mat4 M = translation * rotation * scale;
 
 	sun->draw(M);
 }
@@ -58,7 +63,7 @@ void drawEarth(Quad* earth, const float time)
 	/* translation to distance from sun to earth */
 	mat4 translation = mat4::Identity();
 	/* same trick used here as I applied for the sun scale */
-	translation(0,3) = 0.6 * ((0.2 * cosf(time)) + 1); /* x-axis translation */
+	translation(0,3) = 0.7 * ((0.2 * cosf(time)) + 1); /* x-axis translation */
 	translation(1,3) = 0; /* y-axis translation */
 
 	/* rotation around sun */
@@ -103,7 +108,7 @@ void drawMoon(Quad* moon, const float time)
 
 	/* radius around the sun - should be similar to earth's */
 	mat4 translationSun = mat4::Identity();
-	translationSun(0,3) = 0.6 * ((0.2 * cosf(time)) + 1); /* x-axis translation */
+	translationSun(0,3) = 0.7 * ((0.2 * cosf(time)) + 1); /* x-axis translation */
 	translationSun(1,3) = 0; /* y-axis translation */
 
 	/* rotation around the sun - should be similar to earth's */
