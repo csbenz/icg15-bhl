@@ -56,6 +56,20 @@ public:
         ///
         /// TODO: create the 1D texture (see slides)
         /// 
+        {
+            const int sz=3;
+            GLfloat tex[3*sz] = {/*red*/    1.0, 0.0, 0.0,
+                                /*yellow*/  1.0, 1.0, 0.0,
+                                /*green*/   0.0, 1.0, 0.0};
+            glGenTextures(1, &_tex);
+            glBindTexture(GL_TEXTURE_1D, _tex);
+            glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, sz, 0, GL_RGB, GL_FLOAT, tex);
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            GLuint tex_id = glGetUniformLocation(_pid, "colormap");
+            glUniform1i(tex_id, 0 /*GL_TEXTURE0*/);
+        }
         
         ///--- to avoid the current object being polluted
         glBindVertexArray(0);

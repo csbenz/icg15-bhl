@@ -4,7 +4,9 @@ in vec2 uv;
 out vec3 color;
 
 void main() {
-    color = vec3(1.0, 0.0, 0.0);
+    float value = ((sin(uv.x*31.5) * sin(uv.y*31.5)) + 1 ) / 2;
+    color = texture(colormap, value).rgb;
+
 }
 
 
