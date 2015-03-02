@@ -40,7 +40,10 @@ public:
     }
        
     void cleanup(){
-        /// TODO quad cleanup 
+        glDeleteVertexArrays(1, &_vao);
+        glDeleteProgram(_pid);
+        glDeleteBuffers(1, &_vbo);
+        glDeleteTextures(1, &_tex);
     }
     
     void draw(const mat4& M){
@@ -51,7 +54,7 @@ public:
             glUniformMatrix4fv(M_id, 1, GL_FALSE, M.data());
             
             ///--- Draw
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
         glBindVertexArray(0);        
         glUseProgram(0);
     }
