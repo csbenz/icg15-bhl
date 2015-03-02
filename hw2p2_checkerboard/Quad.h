@@ -57,10 +57,10 @@ public:
         /// TODO: create the 1D texture (see slides)
         /// 
         {
-            const int sz=3;
-            GLfloat tex[3*sz] = {/*red*/    1.0, 0.0, 0.0,
-                                /*yellow*/  1.0, 1.0, 0.0,
-                                /*green*/   0.0, 1.0, 0.0};
+            const int sz = 3;
+            GLfloat tex[3 * sz] = {/*red*/ 1.0, 0.0, 0.0,
+                                /*yellow*/ 1.0, 1.0, 0.0,
+                                 /*green*/ 0.0, 1.0, 0.0};
             glGenTextures(1, &_tex);
             glBindTexture(GL_TEXTURE_1D, _tex);
             glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, sz, 0, GL_RGB, GL_FLOAT, tex);
@@ -78,6 +78,10 @@ public:
        
     void cleanup(){
         /// TODO quad cleanup 
+	glDeleteBuffers(1, &_vbo);
+	glDeleteProgram(_pid);
+	glDeleteVertexArrays(1, &_vao);
+	glDeleteTextures(1, &_tex);
     }
     
     void draw(float time /*seconds*/){
