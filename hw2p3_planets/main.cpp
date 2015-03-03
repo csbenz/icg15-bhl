@@ -9,7 +9,6 @@ void init()
 {
 	glClearColor(/*white*/ 1.0f,1.0f,1.0f, /*solid*/1.0 );
 
-	/// {stuff}.init(...);
 	sun.init("sun.tga");
 	earth.init("earth.tga");
 	moon.init("moon.tga");
@@ -135,7 +134,6 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	float time_s = glfwGetTime();
 
-	/// {stuff}.draw(...);
 	drawSun(&sun, time_s);
 	drawEarth(&earth, time_s);
 	drawMoon(&moon, time_s);
@@ -149,7 +147,6 @@ int main(int, char**)
 	init();
 	glfwMainLoop();
 
-	//// {stuff}.cleanup()
 	sun.cleanup();
 	earth.cleanup();
 	moon.cleanup();

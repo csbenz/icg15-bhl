@@ -23,9 +23,9 @@ public:
 		///--- Vertex coordinates
 		{
 			const GLfloat vpoint[] = { /*V1*/ -1.0f, -1.0f, 0.0f,
-				/*V2*/ +1.0f, -1.0f, 0.0f,
-				/*V3*/ -1.0f, +1.0f, 0.0f,
-				/*V4*/ +1.0f, +1.0f, 0.0f };
+						   /*V2*/ +1.0f, -1.0f, 0.0f,
+						   /*V3*/ -1.0f, +1.0f, 0.0f,
+						   /*V4*/ +1.0f, +1.0f, 0.0f};
 			///--- Buffer
 			glGenBuffers(1, &_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -40,9 +40,9 @@ public:
 		///--- Texture coordinates
 		{
 			const GLfloat vtexcoord[] = { /*V1*/ 0.0f, 0.0f,
-				/*V2*/ 1.0f, 0.0f,
-				/*V3*/ 0.0f, 1.0f,
-				/*V4*/ 1.0f, 1.0f};
+						      /*V2*/ 1.0f, 0.0f,
+						      /*V3*/ 0.0f, 1.0f,
+						      /*V4*/ 1.0f, 1.0f};
 
 			///--- Buffer
 			glGenBuffers(1, &_vbo);
@@ -73,7 +73,6 @@ public:
 
 	void cleanup()
 	{
-		/// TODO: cleanup
 		glDeleteBuffers(1, &_vbo);
 		glDeleteProgram(_pid);
 		glDeleteVertexArrays(1, &_vao);
