@@ -4,5 +4,5 @@ in vec2 uv;
 uniform sampler2D tex;
 
 void main() {
-    color = texture(tex,uv).rgba;
+	color = texture(tex,uv).rgba;
 }

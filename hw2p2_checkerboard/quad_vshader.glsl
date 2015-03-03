@@ -10,17 +10,17 @@ mat4 S(float s)
 
 mat4 R(float degrees)
 {
-    mat3 R = mat3(1);
-    float alpha = radians(degrees);
-    R[0][0] =  cos(alpha);
-    R[0][1] =  sin(alpha);
-    R[1][0] = -sin(alpha);
-    R[1][1] =  cos(alpha);
-    return mat4(R);
+	mat3 R = mat3(1);
+	float alpha = radians(degrees);
+	R[0][0] =  cos(alpha);
+	R[0][1] =  sin(alpha);
+	R[1][0] = -sin(alpha);
+	R[1][1] =  cos(alpha);
+	return mat4(R);
 }
 
 void main()
 {
-    gl_Position = S(.8) * R(10) * vec4(vpoint, 1.0);
-    uv = vtexcoord;
+	gl_Position = S(.8) * R(10) * vec4(vpoint, 1.0);
+	uv = vtexcoord;
 }

@@ -7,6 +7,6 @@ out vec3 color;
 
 void main()
 {
-    float value = ((sin(uv.x * 10 * M_PI) * sin(uv.y * 10 * M_PI)) + 1) / 2;
-    color = texture(colormap, value).rgb;
+	float value = ((sin(uv.x * 10 * M_PI) * sin(uv.y * 10 * M_PI)) + 1) / 2;
+	color = texture(colormap, value).rgb;
 }
