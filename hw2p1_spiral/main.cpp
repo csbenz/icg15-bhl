@@ -17,8 +17,8 @@ void spiral()
 		float const tx = i * 0.013;
 		float const ty = 0;
 		/* we don't do a first scale even if this is what you probably did */
-		float const scale = i * 0.0015;
 		/* for the example because it's a bad use of resources for us */
+		float const scale = i * 0.0015;
 
 		Transform _M = Transform::Identity();
 		_M *= Eigen::AngleAxisf(alpha, Eigen::Vector3f::UnitZ());
@@ -34,6 +34,7 @@ void spiral()
 void fermat()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+	float const goldenNumber = 137.508;
 
 	/* we want a reduced triangle first */
 	float const scale = 0.02;
@@ -48,7 +49,7 @@ void fermat()
 	N(1,1) = scale;
 
 	for(int i = 0; i < 600; ++i) {
-		float const alpha = i * 137.508f * M_PI/360.0f;
+		float const alpha = i * goldenNumber * (M_PI / 360.0);
 		float const r = (2 * scale) * sqrt(alpha);
 		N(0,3) = r * cos(alpha);
 		N(1,3) = r * sin(alpha);
@@ -59,7 +60,7 @@ void fermat()
 	/* with tranfos mode */
 	for (int i = 0; i < 500; ++i) {
 		/* see Wikipedia or slide 8 for those things */
-		float const alpha = i * 137.508f * (M_PI / 360.0f);
+		float const alpha = i * goldenNumber * (M_PI / 360.0);
 		/* we take a constant c = 2 * scale */
 		float const r = (2 * scale) * sqrt(alpha);
 		/* as we rotate first we can translate just r, the *sin(alpha) and *cos(alpha) will be done automatically */
