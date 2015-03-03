@@ -10,14 +10,14 @@ typedef Eigen::Transform<float, 3, Eigen::Affine> Transform;
 void spiral()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	int numTriangles = 60;
+	int const numTriangles = 60;
 
 	for (int i = 0; i < numTriangles; ++i) {
-		float alpha = i * M_PI / 10; /* this is the angle cause there are 10 triangles per pi */
-		float tx = i * 0.013;
-		float ty = 0;
+		float const alpha = i * M_PI / 10; /* this is the angle cause there are 10 triangles per pi */
+		float const tx = i * 0.013;
+		float const ty = 0;
 		/* we don't do a first scale even if this is what you probably did */
-		float scale = i * 0.0015;
+		float const scale = i * 0.0015;
 		/* for the example because it's a bad use of resources for us */
 
 		Transform _M = Transform::Identity();
@@ -36,7 +36,7 @@ void fermat()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	/* we want a reduced triangle first */
-	float scale = 0.02;
+	float const scale = 0.02;
 
 #if 0
 	/*
@@ -48,8 +48,8 @@ void fermat()
 	N(1,1) = scale;
 
 	for(int i = 0; i < 600; ++i) {
-		float alpha = i * 137.508f * M_PI/360.0f;
-		float r = (2 * scale) * sqrt(alpha);
+		float const alpha = i * 137.508f * M_PI/360.0f;
+		float const r = (2 * scale) * sqrt(alpha);
 		N(0,3) = r * cos(alpha);
 		N(1,3) = r * sin(alpha);
 
@@ -59,16 +59,16 @@ void fermat()
 	/* with tranfos mode */
 	for (int i = 0; i < 500; ++i) {
 		/* see Wikipedia or slide 8 for those things */
-		float alpha = i * 137.508f * (M_PI / 360.0f);
+		float const alpha = i * 137.508f * (M_PI / 360.0f);
 		/* we take a constant c = 2 * scale */
-		float r = (2 * scale) * sqrt(alpha);
+		float const r = (2 * scale) * sqrt(alpha);
 		/* as we rotate first we can translate just r, the *sin(alpha) and *cos(alpha) will be done automatically */
-		float Tx = r * cos(alpha);
-		float Ty = r * sin(alpha);
+		float const tx = r * cos(alpha);
+		float const ty = r * sin(alpha);
 
 		Transform _M = Transform::Identity();
 
-		_M *= Eigen::Translation3f(Tx, Ty, 0);
+		_M *= Eigen::Translation3f(tx, ty, 0);
 		_M *= Eigen::AlignedScaling3f(scale, scale, scale);
 		_M *= Eigen::AngleAxisf(alpha, Eigen::Vector3f::UnitZ());
 
