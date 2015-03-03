@@ -43,12 +43,13 @@ void fermat()
 	/*
 	 * That's a point per point calculation !
 	 */
+	int const numTriangles = 600;
 
 	mat4 N = mat4::Identity();
 	N(0,0) = scale;
 	N(1,1) = scale;
 
-	for(int i = 0; i < 600; ++i) {
+	for(int i = 0; i < numTriangles; ++i) {
 		float const alpha = i * goldenNumber * (M_PI / 360.0);
 		float const r = (2 * scale) * sqrt(alpha);
 		N(0,3) = r * cos(alpha);
@@ -57,8 +58,9 @@ void fermat()
 		triangle.draw(N);
 	}
 #else
+	int const numTriangles = 500;
 	/* with tranfos mode */
-	for (int i = 0; i < 500; ++i) {
+	for (int i = 0; i < numTriangles; ++i) {
 		/* see Wikipedia or slide 8 for those things */
 		float const alpha = i * goldenNumber * (M_PI / 360.0);
 		/* we take a constant c = 2 * scale */
