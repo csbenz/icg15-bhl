@@ -89,10 +89,6 @@ void init(){
     triangle.init();
 }
 
-void display(){
-    std::cout << "Shouldn't reach here ! " << std::endl;
-}
-
 int main(int, char**){
     glfwInitWindowSize(512, 512);
 
