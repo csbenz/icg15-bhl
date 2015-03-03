@@ -12,7 +12,7 @@ void init()
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    float time_s = glfwGetTime();
+    float const time_s = glfwGetTime();
     quad.draw(time_s);
 }
 
