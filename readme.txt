@@ -1,7 +1,22 @@
 # hw2p1_spiral
-## main.cpp
-We just needed to complete the missing values.
-We if-else-endif-ed the code to choose between the spiral and the sunflower.
+
+For this homework, we had two differents "flowers" to create, 
+the first ("spiral") will be printed if you change the `#define USE_SPIRAL` to `1`
+the second ("fermat") will be printed by default.
+
+We had different possibilities to display those image, but we choose the transformations method
+because this is what the exercise session told we should do. (We prefere the transformations method more 
+than the point to point method even if the last one can be more precise and 'brut')
+
+We created the methods `spiral` and `fermat` that will display the two differents images.
+
+For both images it's the combination of 3 transformations : Rotation, Translation and Scaling, 
+in a certain order depending on the image we want. The factors for scaling, translating and rotating were finded at the beginning with calculus
+but then approximatively to have something smoother (And nearer to the solution). Ex: `alpha = i * Pi/10` is the angle for the spiral, 
+and we can have this angle with observation, but then the translation factor is due to some tries.
+
+Note : We changed the `(TRIANGLE_STRIP, 0, 4)` to `(TRIANGLES, 0, 3)` in `Triangle.h` because it  was more appropriate for displaying triangles,
+and added the cleanup that wasn't done yet. 
 
 # hw2p2_checkerboard
 ## quad_fshader.glsl
