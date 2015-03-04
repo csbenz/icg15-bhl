@@ -1,7 +1,18 @@
+# hw2p1_spiral
+## main.cpp
+We just needed to complete the missing values.
+We if-else-endif-ed the code to choose between the spiral and the sunflower.
+
+# hw2p2_checkerboard
+## quad_fshader.glsl
+### main()
+Those are sinus in 3d and you need to compose with x and y values.
+You add one and divide by two just to normalize between 0 and 1.
+Then, we want 10 *loops*, which means 5 loops of red-green; and a period of a sinus is 2 * M_PI. This is how you get 10 * M_PI at the end.
+
 # hw2p3_planets
 
 ## main.cpp
-
 ### void init()
 We just init-ed all textures that we were using in our animation
 
