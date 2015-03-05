@@ -15,3 +15,5 @@ include(common/icg_settings.cmake)
 
 #--- Week 3
 add_subdirectory(lab3_opengl3d)      
+add_subdirectory(lab3_opengl3d_SOLUTION)
+add_subdirectory(hw3_trackball)      
