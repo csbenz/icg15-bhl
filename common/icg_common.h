@@ -23,7 +23,6 @@ typedef Eigen::Vector3f vec3;
 typedef Eigen::Vector4f vec4;
 typedef Eigen::Matrix4f mat4;
 typedef Eigen::Matrix3f mat3;
-#include <OpenGP/GL/EigenOpenGLSupport3.h>
 /// We use a modified (to support OpenGL3) version of the Eigen OpenGL module 
 /// @see http://eigen.tuxfamily.org/dox/unsupported/group__OpenGLSUpport__Module.html
 // #include <Eigen/OpenGL3Support>
@@ -44,9 +43,6 @@ typedef Eigen::Matrix3f mat3;
 
 ///--- Utilities to simplify glfw setup
 #include <OpenGP/GL/glfw_helpers.h>
-
-///--- Trackball 3D
-#include <OpenGP/GL/glfw_trackball.h>
 
 ///--- For mesh I/O we use OpenGP
 #include <OpenGP/Surface_mesh.h>

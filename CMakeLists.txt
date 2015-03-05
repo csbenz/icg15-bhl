@@ -6,10 +6,12 @@ include(common/icg_settings.cmake)
 
 #add_subdirectory(helloworld)
 
-add_subdirectory(intro_to_glsl)
-add_subdirectory(intro_to_glsl_SOLUTION)
+#--- Week 2
+#add_subdirectory(intro_to_glsl)
+#add_subdirectory(intro_to_glsl_SOLUTION)
+#add_subdirectory(hw2p1_spiral)       
+#add_subdirectory(hw2p2_checkerboard) 
+#add_subdirectory(hw2p3_planets)
 
-#--- Homework 2
-add_subdirectory(hw2p1_spiral)       
-add_subdirectory(hw2p2_checkerboard) 
-add_subdirectory(hw2p3_planets)      
+#--- Week 3
+add_subdirectory(lab3_opengl3d)      
