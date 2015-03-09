@@ -1,6 +1,9 @@
 #pragma once
 #include "icg_common.h"
 
+//#define USE_WIREFRAME
+#define GRID_SIZE 100
+
 class Grid{
 protected:
 	GLuint _vao;          ///< vertex array object
@@ -11,7 +14,8 @@ protected:
 	GLuint _num_indices;  ///< number of vertices to render
 
 public:    
-	void init(){
+	void init()
+	{
 		// Compile the shaders
 		_pid = opengp::load_shaders("grid_vshader.glsl", "grid_fshader.glsl");
 		if(!_pid) exit(EXIT_FAILURE);       
@@ -25,9 +29,10 @@ public:
 		{
 			std::vector<GLfloat> vertices;
 			std::vector<GLuint> indices;
+#if 1
 			// TODO 5: Make a triangle grid with dimension 100x100.
 			// Always two subsequent entries in 'vertices' form a 2D vertex position.
-			int grid_dim = 100;
+			int grid_dim = GRID_SIZE;
 
 			for (int height = 0; height <= grid_dim; ++height) {
 				for (int width = 0; width <= grid_dim; ++width) {
@@ -54,11 +59,13 @@ public:
 					indices.push_back(topLeft_vertex);
 					indices.push_back(topRight_vertex);
 					indices.push_back(bottomLeft_vertex);
+					indices.push_back(topRight_vertex);
 					indices.push_back(bottomRight_vertex);
+					indices.push_back(bottomLeft_vertex);
 				}
 			}
 
-#if 0
+#else
 			// The given code below are the vertices for a simple quad.
 			// Your grid should have the same dimension as that quad, i.e.,
 			// reach from [-1, -1] to [1, 1].
@@ -93,6 +100,7 @@ public:
 			glVertexAttribPointer(loc_position, 2, GL_FLOAT, DONT_NORMALIZE, ZERO_STRIDE, ZERO_BUFFER_OFFSET);
 		}
 
+#ifndef USE_WIREFRAME
 		// Load texture
 		glGenTextures(1, &_tex);
 		glBindTexture(GL_TEXTURE_2D, _tex);
@@ -103,12 +111,14 @@ public:
 		// Texture uniforms
 		GLuint tex_id = glGetUniformLocation(_pid, "tex");
 		glUniform1i(tex_id, 0 /*GL_TEXTURE0*/);
+#endif
 
 		// to avoid the current object being polluted
 		glBindVertexArray(0);
 	}
 
-	void cleanup(){
+	void cleanup()
+	{
 		glDeleteBuffers(1, &_vbo_position);
 		glDeleteBuffers(1, &_vbo_index);
 		glDeleteVertexArrays(1, &_vao);
@@ -116,12 +126,15 @@ public:
 		glDeleteTextures(1, &_tex);
 	}
 
-	void draw(const mat4& model, const mat4& view, const mat4& projection, float time){
+	void draw(const mat4& model, const mat4& view, const mat4& projection, float time)
+	{
 		glUseProgram(_pid);
 		glBindVertexArray(_vao);
+#ifndef USE_WIREFRAME
 		// Bind textures
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, _tex);
+#endif
 
 		// Setup MVP
 		mat4 MVP = projection*view*model;
@@ -132,12 +145,14 @@ public:
 		glUniform1f(glGetUniformLocation(_pid, "time"), time);
 
 		// Draw
+#ifdef USE_WIREFRAME
 		// TODO 5: For debugging it can be helpful to draw only the wireframe.
 		// You can do that by uncommenting the next line.
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 		// TODO 5: Depending on how you set up your vertex index buffer, you
 		// might have to change GL_TRIANGLE_STRIP to GL_TRIANGLES.
-		glDrawElements(GL_TRIANGLE_STRIP, _num_indices, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, _num_indices, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);        
 		glUseProgram(0);
 	}
