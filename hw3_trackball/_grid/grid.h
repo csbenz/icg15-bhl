@@ -32,13 +32,13 @@ public:
 #if 1
 			// TODO 5: Make a triangle grid with dimension 100x100.
 			// Always two subsequent entries in 'vertices' form a 2D vertex position.
-			int grid_dim = GRID_SIZE;
+			const int grid_dim = GRID_SIZE;
 
 			for (int height = 0; height <= grid_dim; ++height) {
 				for (int width = 0; width <= grid_dim; ++width) {
 					/* scaling width and height to fit on the canvas */
-					float x_vertex = (2.0 * ((float) width / (float) grid_dim)) - 1.0;
-					float y_vertex = (-2.0 * ((float) height / (float) grid_dim)) + 1.0;
+					const float x_vertex = (2.0 * ((float) width / (float) grid_dim)) - 1.0;
+					const float y_vertex = (-2.0 * ((float) height / (float) grid_dim)) + 1.0;
 
 					/* push them as vertices */
 					vertices.push_back(x_vertex);
@@ -50,10 +50,10 @@ public:
 			for (int height = 0; height < grid_dim; ++height) {
 				for (int width = 0; width < grid_dim; ++width) {
 					/* getting the indices */
-					int topLeft_vertex = (height * (grid_dim + 1)) + width;
-					int topRight_vertex = topLeft_vertex + 1;
-					int bottomLeft_vertex = topLeft_vertex + (grid_dim + 1); 
-					int bottomRight_vertex = bottomLeft_vertex + 1; 
+					const int topLeft_vertex = (height * (grid_dim + 1)) + width;
+					const int topRight_vertex = topLeft_vertex + 1;
+					const int bottomLeft_vertex = topLeft_vertex + (grid_dim + 1);
+					const int bottomRight_vertex = bottomLeft_vertex + 1;
 
 					/* pushing */
 					indices.push_back(topLeft_vertex);
