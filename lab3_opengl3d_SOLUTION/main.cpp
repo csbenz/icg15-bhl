@@ -22,8 +22,8 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
     ortho(1, 1) = 2.0f / (top - bottom);
     ortho(2, 2) = -2.0f / (far - near);
     ortho(3, 3) = 1.0f;
-    ortho(1, 3) = -(right + left) / (right - left);
-    ortho(2, 3) = -(top + bottom) / (top - bottom);
+    ortho(0, 3) = -(right + left) / (right - left);
+    ortho(1, 3) = -(top + bottom) / (top - bottom);
     ortho(2, 3) = -(far + near) / (far - near);
     return ortho;
 }

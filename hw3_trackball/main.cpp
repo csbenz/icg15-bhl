@@ -26,8 +26,8 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
     ortho(1, 1) = 2.0f / (top - bottom);
     ortho(2, 2) = -2.0f / (far - near);
     ortho(3, 3) = 1.0f;
-    ortho(1, 3) = -(right + left) / (right - left);
-    ortho(2, 3) = -(top + bottom) / (top - bottom);
+    ortho(0, 3) = -(right + left) / (right - left);
+    ortho(1, 3) = -(top + bottom) / (top - bottom);
     ortho(2, 3) = -(far + near) / (far - near);
     return ortho;
 }
@@ -154,10 +154,10 @@ void mouse_button(int button, int action) {
 void mouse_pos(int x, int y) {
     if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         vec2 p = transform_screen_coords(x, y);
-        // TODO 3: Cacuclate 'model_matrix' given the return value of
-        // trackball.drag(...) and the value stored in 'old_model_matrix'.
+        // TODO 3: Cacuclate 'trackball_matrix' given the return value of
+        // trackball.drag(...) and the value stored in 'old_trackball_matrix'.
         // See also the mouse_button(...) function.
-        //model_matrix = ...
+        //trackball_matrix = ...
     }
 
     // Zoom
