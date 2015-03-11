@@ -22,7 +22,6 @@ public:
       vec3 current_pos = vec3(x, y, 0.0f);
       project_onto_surface(current_pos);
 
-      mat4 rotation = mat4::Identity();
       // TODO 3: Calculate the rotation given the projections of the anocher
       // point and the current position. The rotation axis is given by the cross
       // product of the two projected points, and the angle between them can be
@@ -30,6 +29,11 @@ public:
       // You might want to scale the rotation magnitude by a scalar factor.
       // p.s. No need for using complicated quaternions as suggested inthe wiki
       // article.
+      vec3 rotAxis = _anchor_pos.cross(current_pos).normalized();
+      float rotAngle = acos( current_pos.dot(_anchor_pos));
+
+      mat4 rotation = (Eigen::Affine3f(Eigen::AngleAxisf(rotAngle, rotAxis))).matrix();
+
       return rotation;
     }
 
@@ -41,6 +45,16 @@ private:
     // The trackball radius is given by '_radius'.
     void project_onto_surface(vec3& p) const {
       // TODO 2: Implement this function. Read above link for details.
+
+        if(p.x()*p.x() + p.y()*p.y() <= _radius*_radius/2.0f) {
+            // Project on sphere
+            p.z() = sqrt(_radius*_radius - (p.x()*p.x() + p.y()*p.y()));
+        } else {
+            // Project onto hyperbolic sheet
+            p.z() = (_radius*_radius / 2.0f) / (sqrt(p.x()*p.x() + p.y()*p.y()));
+        }
+
+        p.normalize();
     }
 
     float _radius;

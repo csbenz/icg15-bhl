@@ -11,6 +11,8 @@ Grid grid;
 int WIDTH = 800;
 int HEIGHT = 600;
 
+int savedYMousePos = 0;
+
 mat4 projection_matrix;
 mat4 view_matrix;
 mat4 trackball_matrix;
@@ -26,8 +28,8 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
     ortho(1, 1) = 2.0f / (top - bottom);
     ortho(2, 2) = -2.0f / (far - near);
     ortho(3, 3) = 1.0f;
-    ortho(0, 3) = -(right + left) / (right - left);
-    ortho(1, 3) = -(top + bottom) / (top - bottom);
+    ortho(1, 3) = -(right + left) / (right - left);
+    ortho(2, 3) = -(top + bottom) / (top - bottom);
     ortho(2, 3) = -(far + near) / (far - near);
     return ortho;
 }
@@ -35,7 +37,22 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
 mat4 PerspectiveProjection(float fovy, float aspect, float near, float far){
     // TODO 1: Create a perspective projection matrix given the field of view,
     // aspect ratio, and near and far plane distances.
-    mat4 projection = mat4::Identity();
+    float fovyDegrees = fovy  * (3.1415 / 180.0f);
+    float halfHeight =  near * tanf(fovyDegrees / 2.0f);
+    float top = halfHeight;
+    float bottom = -top;
+    float right = aspect * halfHeight;
+    float left = -right;
+
+    mat4 projection = mat4::Zero();
+    projection(0, 0) = 2.0f * near / (right - left);
+    projection(1, 1) = 2.0f * near / (top - bottom);
+    projection(2, 2) = -(far + near) / (far - near);
+    projection(0, 2) = (right + left) / (right - left);
+    projection(1, 2) = (top + bottom) / (top - bottom);
+    projection(2, 3) = -(2.0f * far * near) / (far - near);
+    projection(3, 2) = -1;
+
     return projection;
 }
 
@@ -80,10 +97,11 @@ void resize_callback(int width, int height) {
     glViewport(0, 0, WIDTH, HEIGHT);
 
     // TODO 1: Use a perspective projection instead;
-    //projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
-    GLfloat top = 1.0f;
-    GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
-    projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
+    projection_matrix = PerspectiveProjection(45.0f, (GLfloat)WIDTH / HEIGHT, 0.1f, 100.0f);
+
+//    GLfloat top = 1.0f;
+//    GLfloat right = (GLfloat)WIDTH / HEIGHT * top;
+//    projection_matrix = OrthographicProjection(-right, right, -top, top, -10.0, 10.0f);
 }
 
 void init(){
@@ -100,8 +118,8 @@ void init(){
     // looks straight down the -z axis. Otherwise the trackball's rotation gets
     // applied in a rotated coordinate frame.
     // Uncomment lower line to achieve this.
-    view_matrix = LookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-    //view_matrix = Eigen::Affine3f(Eigen::Translation3f(0.0f, 0.0f, -4.0f)).matrix();
+    //view_matrix = LookAt(vec3(2.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view_matrix = Eigen::Affine3f(Eigen::Translation3f(0.0f, 0.0f, -6.0f)).matrix();
 
     trackball_matrix = mat4::Identity();
     check_error_gl();
@@ -149,15 +167,20 @@ void mouse_button(int button, int action) {
         trackball.begin_drag(p.x(), p.y());
         old_trackball_matrix = trackball_matrix;  // Store the current state of the model matrix.
     }
+
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        glfwGetMousePos(NULL, &savedYMousePos);
+    }
 }
 
 void mouse_pos(int x, int y) {
     if (glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         vec2 p = transform_screen_coords(x, y);
-        // TODO 3: Cacuclate 'trackball_matrix' given the return value of
-        // trackball.drag(...) and the value stored in 'old_trackball_matrix'.
+        // TODO 3: Calculate 'model_matrix' given the return value of
+        // trackball.drag(...) and the value stored in 'old_model_matrix'.
         // See also the mouse_button(...) function.
-        //trackball_matrix = ...
+        //model_matrix = ...
+        trackball_matrix = trackball.drag(p.x(), p.y()) * old_trackball_matrix;
     }
 
     // Zoom
@@ -167,6 +190,11 @@ void mouse_pos(int x, int y) {
         // should zoom out and it. For that you have to update the current
         // 'view_matrix' with a translation along the z axis.
         //view_matrix = ...
+        mat4 zRot = mat4::Identity();
+        zRot(2, 3) = (y - savedYMousePos) / 50.0f;
+        view_matrix = zRot * view_matrix;
+
+        glfwGetMousePos(NULL, &savedYMousePos);
     }
 }
 
