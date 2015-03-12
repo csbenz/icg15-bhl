@@ -1,0 +1,28 @@
+get_filename_component(EXERCISENAME ${CMAKE_CURRENT_LIST_DIR} NAME)
+
+file(GLOB_RECURSE SOURCES "*.cpp")
+file(GLOB_RECURSE HEADERS "*.h")
+add_executable(${EXERCISENAME} ${SOURCES} ${HEADERS})
+target_link_libraries(${EXERCISENAME} ${COMMON_LIBS})
+
+target_deploy_file(${EXERCISENAME} ../external/AntTweakBar/lib/x64/AntTweakBar64.dll) 
+
+target_deploy_file(${EXERCISENAME} _quad/quad_vshader.glsl) 
+target_deploy_file(${EXERCISENAME} _quad/quad_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _quad/quad_texture.tga) 
+
+target_deploy_file(${EXERCISENAME} _mesh/gouraud_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/gouraud_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/phong_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/phong_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/art_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/art_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/toon_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/toon_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/flat_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/flat_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/spot_vshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/spot_fshader.glsl)
+target_deploy_file(${EXERCISENAME} _mesh/tangle_cube.obj)
+target_deploy_file(${EXERCISENAME} _mesh/cube.obj)
+target_deploy_file(${EXERCISENAME} _mesh/sphere.obj)
