@@ -13,6 +13,25 @@ message(STATUS "Intro to Graphics - Loading Common Configuration")
 # files in the folder where the current file is located
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
+#--- Configures compiler for C++11
+if(EXISTS "/usr/bin/icc")
+    #--- If intel compiler is installed use it (ICC is already c++11 compliant)
+    message(STATUS "Using ICC Intel Compiler.")
+    set(CMAKE_CC_COMPILER "/usr/bin/icc")
+    set(CMAKE_CXX_COMPILER "/usr/bin/icc")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(UNIX)
+    if(NOT APPLE)
+        # Enable c++11 for GCC 
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    else()
+        # Clang in OSX supports partially c++11 through extensions
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++11-extensions")        
+    endif()
+elseif(WIN32)    
+    # MSVC12 supports c++11 natively
+endif()
+
 #--- CMake extension to load GLFW
 find_package(GLFW REQUIRED)
 include_directories(${GLFW_INCLUDE_DIRS})
@@ -100,6 +119,23 @@ if(PKGCONFIG_FOUND)
     if(OPENCV_FOUND)
         add_definitions(-DWITH_OPENCV)
     endif()
+endif()
+
+#--- AntTweakBar
+find_package(AntTweakBar)
+if(ANTTWEAKBAR_FOUND)
+    include_directories(${ANTTWEAKBAR_INCLUDE_DIR})
+    list(APPEND COMMON_LIBS ${ANTTWEAKBAR_LIBRARY})
+    add_definitions(-DWITH_ANTTWEAKBAR)
+endif()
+
+#--- X11 (required by AntTweakBar)
+if(UNIX AND NOT APPLE)
+    find_package(X11)
+    if(NOT X11_FOUND)
+        message(FATAL_ERROR "Cannot found X11 on linux?")
+    endif()
+    list(APPEND COMMON_LIBS ${X11_LIBRARIES})
 endif()
 
 #--- OBSOLETE: as now shaders are deployed in .h files
