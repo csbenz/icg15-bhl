@@ -22,8 +22,9 @@ FIND_PATH( OpenGP_INCLUDE_DIRS OpenGP/Surface_mesh.h
     /usr/include
     /opt/X11/include
     /opt/include
-    ${CMAKE_SOURCE_DIR}/external
-    ${CMAKE_SOURCE_DIR}/external/OpenGP/include)
+    ${CMAKE_SOURCE_DIR}/external # new
+    ${CMAKE_SOURCE_DIR}/external/OpenGP/include # obsolete
+)
 
 SET(OPENGP_FOUND "NO")
 SET(OpenGP_FOUND "NO")

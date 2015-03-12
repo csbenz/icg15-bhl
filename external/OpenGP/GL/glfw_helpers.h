@@ -24,7 +24,7 @@ void glfwInitWindowSize(int width, int height){
     _height = height;
 }
 
-int glfwCreateWindow(const char* title){
+int glfwCreateWindow(const char* title = NULL){
     // GLFW Initialization
     if( !glfwInit() ){
         fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -47,10 +47,17 @@ int glfwCreateWindow(const char* title){
         return EXIT_FAILURE;
     }
 
-    /// Outputs the OpenGL version
+    /// Outputs the OpenGL version & set title
     int major, minor, revision;
-    glfwGetGLVersion(&major, &minor,&revision);
-    std::cout << "Opened GLFW OpenGL " << major << "." << minor << "." << revision << std::endl;
+    glfwGetGLVersion(&major, &minor, &revision);
+    if(title == NULL){
+        std::ostringstream strout;
+        strout << "GLFW OpenGL " << major << "." << minor << "." << revision << std::endl;    
+        std::string _title = strout.str();
+        glfwSetWindowTitle(_title.c_str());
+    } else {
+        glfwSetWindowTitle(title);
+    }
     
     // GLEW Initialization (must have a context)
     glewExperimental = true;
@@ -69,9 +76,6 @@ int glfwCreateWindow(const char* title){
         }
     }
     check_error_gl();          
-    
-    /// Set window title
-    glfwSetWindowTitle(title);
     
     return EXIT_SUCCESS;
 }
@@ -117,6 +121,68 @@ GLuint load_texture_targa(const std::string& path){
 
     // Return the ID of the texture we just created
     return textureID;
+}
+
+
+/// @see http://r3dux.org/2012/07/a-simple-glfw-fps-counter/
+float update_title_fps(std::string theWindowTitle = "NONE", float theTimeInterval = 1.0)
+{
+    // Static values which only get initialised the first time the function runs
+    static float t0Value       = glfwGetTime(); // Set the initial time to now
+    static int    fpsFrameCount = 0;             // Set the initial FPS frame count to 0
+    static float fps           = 0.0;           // Set the initial FPS value to 0.0
+    
+    // Get the current time in seconds since the program started (non-static, so executed every time)
+    float currentTime = glfwGetTime();
+    
+    // Ensure the time interval between FPS checks is sane (low cap = 0.1s, high-cap = 10.0s)
+    // Negative numbers are invalid, 10 fps checks per second at most, 1 every 10 secs at least.
+    if (theTimeInterval < 0.1)
+    {
+        theTimeInterval = 0.1;
+    }
+    if (theTimeInterval > 10.0)
+    {
+        theTimeInterval = 10.0;
+    }
+    
+    // Calculate and display the FPS every specified time interval
+    if ((currentTime - t0Value) > theTimeInterval)
+    {
+        // Calculate the FPS as the number of frames divided by the interval in seconds
+        fps = (float)fpsFrameCount / (currentTime - t0Value);
+        
+        // If the user specified a window title to append the FPS value to...
+        if (theWindowTitle != "NONE")
+        {
+            // Convert the fps value into a string using an output stringstream
+            std::ostringstream stream;
+            stream << fps;
+            std::string fpsString = stream.str();
+            
+            // Append the FPS value to the window title details
+            theWindowTitle += " | FPS: " + fpsString;
+            
+            // Convert the new window title to a c_str and set it
+            const char* pszConstString = theWindowTitle.c_str();
+            glfwSetWindowTitle(pszConstString);
+        }
+        else // If the user didn't specify a window to append the FPS to then output the FPS to the console
+        {
+            std::cout << "FPS: " << fps << std::endl;
+        }
+        
+        // Reset the FPS frame counter and set the initial time to be now
+        fpsFrameCount = 0;
+        t0Value = glfwGetTime();
+    }
+    else // FPS calculation time interval hasn't elapsed yet? Simply increment the FPS frame counter
+    {
+        fpsFrameCount++;
+    }
+    
+    // Return the current FPS - doesn't have to be used if you don't want it!
+    return fps;
 }
 
 } // opengp::
