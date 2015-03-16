@@ -4,7 +4,6 @@ uniform vec3 Ia, Id, Is;
 uniform vec3 ka, kd, ks;
 uniform float p;
 
-
 in vec4 normal_mv;
 in vec4 light_dir;
 in vec4 view_dir;
