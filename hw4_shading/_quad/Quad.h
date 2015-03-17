@@ -71,7 +71,10 @@ public:
     }
            
     void cleanup(){
-        /// TODO
+        glDeleteBuffers(1, &_vbo);
+        glDeleteProgram(_pid);
+        glDeleteVertexArrays(1, &_vao);
+        glDeleteTextures(1, &_tex);
     }
     
     void draw(const mat4& model, const mat4& view, const mat4& projection){

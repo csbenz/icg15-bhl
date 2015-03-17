@@ -11,22 +11,29 @@ out vec3 color;
 
 void main() {
 
-    vec3 derX = dFdx(vpoint_mv.xyz);
-    vec3 derY = dFdy(vpoint_mv.xyz);
-    vec3 normal_mv = normalize(cross(derX, derY));
+    ///>>>>>>>>>> TODO >>>>>>>>>>>
+    /// TODO 4.2: Flat shading.
+    /// 1) compute triangle normal using dFdx and dFdy
+    /// 1) compute ambient term.
+    /// 2) compute diffuse term.
+    /// 3) compute specular term.
+    ///<<<<<<<<<< TODO <<<<<<<<<<<
 
-    vec3 R = normalize(2.0f * dot(light_dir, normal_mv) * normal_mv - light_dir);
+    vec3 normal_mv = normalize(cross(dFdx(vpoint_mv.xyz), dFdy(vpoint_mv.xyz)));
 
-    float VR = dot(view_dir, R);
-    if (VR < 0.0) {
-        VR = 0.0;
+    vec3 R = normalize(reflect(-light_dir, normal_mv));
+
+
+    float RV = dot(R, view_dir);
+    float NL = dot(normal_mv, light_dir);
+
+    if(RV < 0.0) {
+        RV = 0.0;
     }
 
-    float NL = dot(normal_mv, light_dir);
-    if (NL < 0.0){
+    if(NL < 0.0) {
         NL = 0.0;
     }
 
-    color = (Ia*ka) + (Id*kd)*NL + (Is*ks)*pow(VR, p);
+    color = (Ia*ka) + (Id*kd)*NL + (Is*ks)*pow(RV, p);
 }
-

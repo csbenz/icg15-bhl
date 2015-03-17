@@ -14,10 +14,12 @@ void main() {
     mat4 MV = view * model;
     vpoint_mv = MV * vec4(vpoint, 1.0);
     gl_Position = projection * vpoint_mv;
-
+    ///>>>>>>>>>> TODO >>>>>>>>>>>
+    /// TODO 4.1: Flat shading.
     /// 1) compute the light direction light_dir.
-    light_dir = normalize(vec4(light_pos, 1.0) - vpoint_mv);
     /// 2) compute the view direction view_dir.
-    view_dir = normalize(vec4(0.0, 0.0, 0.0, 1.0) - vpoint_mv);
-}
+    ///<<<<<<<<<< TODO <<<<<<<<<<<
 
+    light_dir = normalize(light_pos - vpoint_mv.xyz);
+    view_dir = normalize(-vpoint_mv.xyz);
+}
