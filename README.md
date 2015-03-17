@@ -27,6 +27,9 @@ Make sure if there is troubles to `make clean` before complaining about some wei
 This library is linked by cmake and it is dependent of the environment where you compiled it though (username, path).
 You can check this by running `ldd` on the compiled library and see which one(s) are in your `/home/username/` folder.
 There aren't any solutions, just compile from nothing...
+After asking the assistant, he came up with the solution in the patch file that is hard coding the path of my libraries.
+If you need to do this hack too, just do `patch -p0 < archlinux-FindGLFW.cmake` and follow the instructions.
+Just make sure you do not commit an altered FindGLFW.cmake file otherwise it will break any other install.
 
 ### Hey, my code works on Windows but not on Linux. WTF!
 Linus has a case sensitive file system, make sure the uppercase/lowercase files are all correct.
