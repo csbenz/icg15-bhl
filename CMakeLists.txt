@@ -19,4 +19,9 @@ include(common/icg_settings.cmake)
 #add_subdirectory(hw3_trackball)
 
 #--- Week 4
-add_subdirectory(hw4_shading)
+#add_subdirectory(hw4_shading)
+
+#--- Week 5
+add_subdirectory(lab5_bezier)
+#add_subdirectory(lab5_bezier_SOLUTION)
+add_subdirectory(hw5_bezier)
