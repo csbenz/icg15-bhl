@@ -13,7 +13,6 @@ Session.vim
 # C Object files
 *.o
 *.ko
-*.obj
 *.elf
 
 # Precompiled Headers
@@ -45,7 +44,6 @@ Session.vim
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
