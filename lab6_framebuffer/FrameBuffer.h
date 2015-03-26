@@ -60,16 +60,27 @@ public:
         
         ///--- Create render buffer (for depth channel)
         {
+#if 0
             glGenRenderbuffersEXT(1, &_depth_rb);
             glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, _depth_rb);
             glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT32, _width, _height);
-            glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+#else 
+            glGenRenderbuffers(1, &_depth_rb);
+            glBindRenderbuffer(GL_RENDERBUFFER, _depth_rb);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, _width, _height);
+            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
         }
     
         ///--- Tie it all together
         {
             glGenFramebuffers(1, &_fbo);
-            glBindFramebuffer(GL_FRAMEBUFFER_EXT, _fbo);
+#if 0
+	    glBindFramebuffer(GL_FRAMEBUFFER_EXT, _fbo);
+#else
+            glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+#endif
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 /*location = 0*/, GL_TEXTURE_2D, _color_tex, 0 /*level*/);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depth_rb);
             if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -83,8 +94,13 @@ public:
     void cleanup() {
         glDeleteTextures(1, &_color_tex);
         glDeleteRenderbuffers(1, &_depth_rb);
+#if 0
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0 /*UNBIND*/);
         glDeleteFramebuffersEXT(1, &_fbo);
+#else
+        glBindFramebuffer(GL_FRAMEBUFFER, 0 /*UNBIND*/);
+        glDeleteFramebuffers(1, &_fbo);
+#endif
     }
     
 public:

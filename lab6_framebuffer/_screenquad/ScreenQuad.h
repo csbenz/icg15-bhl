@@ -7,6 +7,7 @@ protected:
     GLuint _pid; ///< GLSL shader program ID 
     GLuint _vbo; ///< memory buffer
     GLuint _tex; ///< Texture ID
+    float _weights[11];
 public:
     void init(GLuint texture){ 
         
@@ -59,7 +60,17 @@ public:
         glBindTexture(GL_TEXTURE_2D, _tex);
         GLuint tex_id = glGetUniformLocation(_pid, "tex");
         glUniform1i(tex_id, 0 /*GL_TEXTURE0*/);
-    
+
+	float sum = 0.0;
+	for (int i = 0; i < 11; ++i) {
+		float x = i - 5;
+		_weights[i] = exp(-(x * x) / 8);
+		sum += _weights[i];
+	}
+
+	for (size_t i = 0; i < 11; ++i) {
+		_weights[i] /= sum;
+	}
         
         ///--- to avoid the current object being polluted
         glBindVertexArray(0);
@@ -70,11 +81,13 @@ public:
         // TODO cleanup
     }
     
-    void draw(){
+    void draw(vec2 direction){
         glUseProgram(_pid);
         glBindVertexArray(_vao);      
             glUniform1f(glGetUniformLocation(_pid, "tex_width"), _width);
             glUniform1f(glGetUniformLocation(_pid, "tex_height"), _height); 
+            glUniform2f(glGetUniformLocation(_pid, "direction"), direction.x(), direction.y()); 
+            glUniform1fv(glGetUniformLocation(_pid, "weights"), 11, _weights); 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, _tex);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);        

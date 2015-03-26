@@ -9,6 +9,11 @@ int width=1280, height=720;
 Cube cube;
 Quad quad;
 
+FrameBuffer fb_x(width, height);
+FrameBuffer fb_y(width, height);
+ScreenQuad squad_x;
+ScreenQuad squad_y;
+
 // TODO: declare Framebuffer + ScreenQuad (see slides)
 
 void init(){
@@ -18,6 +23,10 @@ void init(){
     quad.init();
     // TODO: initialize framebuffer (see slides)
     // TODO: initialize fullscreen quad (see slides)
+    GLuint fb_tex_x = fb_x.init();
+    GLuint fb_tex_y = fb_y.init();
+    squad_x.init(fb_tex_x);
+    squad_y.init(fb_tex_y);
 }
 
 void display(){ 
@@ -34,11 +43,22 @@ void display(){
     mat4 VP = projection * view;
     
     // TODO: wrap these calls so they render to a texture (see slides)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    cube.draw(VP, glfwGetTime());
-    quad.draw(VP);
+    fb_x.bind();
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	    cube.draw(VP, glfwGetTime());
+	    quad.draw(VP);
+    fb_x.unbind();
     
     // TODO: use the fullscreen quad to draw the FB texture to screen (see slides)
+    //glViewport(0, 0, width, height);
+    fb_y.bind();
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	    squad_x.draw(vec2(1.0 / width, 0));
+    fb_y.unbind();
+
+    glViewport(0, 0, width, height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    squad_y.draw(vec2(0, 1.0 / height));
 }
 
 int main(int, char**){
