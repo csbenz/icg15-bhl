@@ -164,6 +164,7 @@ public:
 
         glUseProgram(_pid);
         glBindVertexArray(_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, _vbo);
         check_error_gl();
 
         ///--- Vertex Attribute ID for Vertex Positions

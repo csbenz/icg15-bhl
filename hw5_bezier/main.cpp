@@ -187,7 +187,7 @@ void display(){
 
         mat4 view_bezier = Eigen::lookAt(cam_pos, cam_look, cam_up);
         quad.draw(model, view_bezier, projection);
-        cube.draw(model, view_bezier, projection);
+        mesh.draw(model, view_bezier, projection);
     }
 
     if (navmode == TRACKBALL) {
@@ -207,7 +207,7 @@ void display(){
         cam_look_curve.draw(trackball_matrix * model, view, projection);
 
         quad.draw(trackball_matrix * model, view, projection);
-        cube.draw(trackball_matrix * model, view, projection);
+        mesh.draw(trackball_matrix * model, view, projection);
     }
 }
 
