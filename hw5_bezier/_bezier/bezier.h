@@ -40,6 +40,35 @@ private:
         /// - Split at \alpha = 0.5
         /// - Save the points to _vertices
         ///================================================
+
+        Hull l;
+        Hull r;
+
+        //--- endpoints
+        l.p1() = p.p1();
+        r.p4() = p.p4();
+
+        //--- one-in
+        l.p2() = (p.p1() + p.p2()) / 2.0;
+        r.p3() = (p.p3() + p.p4()) / 2.0;
+
+        //--- interior
+        l.p3() = ( l.p2() + (p.p2() + p.p3())/2.0 )/2.0;
+        r.p2() = ( r.p3() + (p.p2() + p.p3())/2.0 )/2.0;
+
+        //--- middle
+        l.p4() = ( l.p3() + r.p2() ) / 2.0;
+        r.p1() = l.p4();
+
+
+        //--- recursion v.s. draw
+        if(depth<5){
+            bezier(l,depth+1);
+            bezier(r,depth+1);
+        } else {
+            _vertices.push_back(l.p1());
+        }
+        _vertices.push_back(p.p4());
     }
 
     void compute_parameterization(){
@@ -53,6 +82,12 @@ private:
         /// Assume piece-wise linear approximation of the curve
         /// http://math.stackexchange.com/questions/12186/arc-length-of-bézier-curves
         ///================================================
+        _param[0] = 0;
+        for (unsigned int i = 1; i < _vertices.size(); ++i) {
+            vec3 d = _vertices[i] - _vertices[i - 1];
+
+            _param[i] = _param[i - 1] + d.norm();
+        }
     }
 public:
     void init(GLuint pid){
@@ -71,19 +106,23 @@ public:
         glBindVertexArray(0);
         glUseProgram(0);
     }
-    void set_points(const vec3& p1, const vec3& p2, const vec3& p3, const vec3& p4) {
+    void set_points(std::vector<ControlPoint> p) {
         _vertices.clear();
         _param.clear();
 
-        ///--- initialize data
-        _hull.p1() = p1;
-        _hull.p2() = p2;
-        _hull.p3() = p3;
-        _hull.p4() = p4;
+        for (int it = 0; it+3 < p.size(); it+=3) {
+            ///--- initialize data
+            _hull.p1() = p[it].position();
+            _hull.p2() = p[it+1].position();
+            _hull.p3() = p[it+2].position();
+            _hull.p4() = p[it+3].position();
 
-        ///--- compute bezier & parameterization
-        bezier(_hull);
+            ///--- compute bezier & parameterization
+            bezier(_hull);
+        }
+
         compute_parameterization();
+
     }
     static bool cmp(const Scalar &a, const Scalar &b){
         return (a<b);
@@ -99,6 +138,26 @@ public:
         /// The distance along the curve from _vertices[0] to sample is
         /// t * curve_length
         ///================================================
+
+        if (_param.size() == 1 || _vertices.size() == 1) {
+            sample = _vertices[0];
+            return;
+        }
+
+        double curve_length = _param[_param.size() - 1];
+        double distance = t * curve_length;
+
+        int min_i = 0;
+        int max_i = 1;
+
+        while (_param[max_i] < distance) {
+            min_i++;
+            max_i++;
+        }
+
+        double frac = (distance - _param[min_i]) / (_param[max_i] - _param[min_i]);
+        sample = (1 - frac) * _vertices[min_i] + frac * _vertices[max_i];
+
     }
     void draw(const mat4& model, const mat4& view, const mat4& projection){
         if (_vertices.empty()) return;

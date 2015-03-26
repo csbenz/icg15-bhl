@@ -61,6 +61,29 @@ public:
     }
 
     void draw_selection(const mat4& model, const mat4& view, const mat4& projection) {
+        glUseProgram(_pid_selection);
+        glBindVertexArray(_vao);
+
+        ///--- Load position
+        GLint pos_id = glGetUniformLocation(_pid_selection, "pos");
+        glUniform3fv(pos_id, 1, _p.data());
+
+        GLint code_id = glGetUniformLocation(_pid_selection, "code");
+        glUniform1i(code_id, _id);
+
+        ///--- Setup MVP
+        mat4 MVP = projection*view*model;
+        GLint MVP_id = glGetUniformLocation(_pid_selection, "mvp");
+        assert(MVP_id >= 0);
+        glUniformMatrix4fv(MVP_id, 1, GL_FALSE, MVP.data());
+
+        ///--- Draw
+        glEnable(GL_PROGRAM_POINT_SIZE);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glDisable(GL_PROGRAM_POINT_SIZE);
+
+        glBindVertexArray(0);
+        glUseProgram(0);
     }
 
 public:

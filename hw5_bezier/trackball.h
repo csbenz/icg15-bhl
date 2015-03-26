@@ -22,15 +22,10 @@ public:
       vec3 current_pos = vec3(x, y, 0.0f);
       project_onto_surface(current_pos);
 
-      mat4 rotation = mat4::Identity();
-      if (current_pos == _anchor_pos) {
-        return rotation;
-      }
+      vec3 rotAxis = _anchor_pos.cross(current_pos).normalized();
+      float rotAngle = acos( current_pos.dot(_anchor_pos));
 
-      const float angle_boost = 6.0f;
-      vec3 axis = _anchor_pos.cross(current_pos);
-      float angle = angle_boost * atan2(axis.norm(), _anchor_pos.dot(current_pos));
-      rotation = Eigen::Affine3f(Eigen::AngleAxisf(angle, axis.normalized())).matrix();
+      mat4 rotation = (Eigen::Affine3f(Eigen::AngleAxisf(rotAngle, rotAxis))).matrix();
 
       return rotation;
     }
@@ -42,16 +37,15 @@ private:
     // https://www.opengl.org/wiki/Object_Mouse_Trackball.
     // The trackball radius is given by '_radius'.
     void project_onto_surface(vec3& p) const {
-      const float rad2 = _radius * _radius;
-      const float length2 = p.x() * p.x() + p.y() * p.y();
+        if(p.x()*p.x() + p.y()*p.y() <= _radius*_radius/2.0f) {
+            // Project on sphere
+            p.z() = sqrt(_radius*_radius - (p.x()*p.x() + p.y()*p.y()));
+        } else {
+            // Project onto hyperbolic sheet
+            p.z() = (_radius*_radius / 2.0f) / (sqrt(p.x()*p.x() + p.y()*p.y()));
+        }
 
-      if (length2 <= rad2 * 0.5f) {
-        p.z() = std::sqrt(rad2 - length2);
-      } else {
-        p.z() = rad2 / (2.0f * std::sqrt(length2));
-      }
-      float length = std::sqrt(length2 + p.z() * p.z());
-      p /= length;
+        p.normalize();
     }
 
     float _radius;
