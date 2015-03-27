@@ -1,6 +1,6 @@
 #version 330 core
 
-#define EFFECT_TYPE 1
+#define EFFECT_TYPE 2
 
 uniform sampler2D tex;
 uniform float tex_width;
