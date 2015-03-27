@@ -19,12 +19,12 @@ static int _width = 640;
 static int _height = 480;
 static void (*_display)(void) = NULL;
 
-void glfwInitWindowSize(int width, int height){
+inline void glfwInitWindowSize(int width, int height){
     _width = width;
     _height = height;
 }
 
-int glfwCreateWindow(const char* title = NULL){
+inline int glfwCreateWindow(const char* title = NULL){
     // GLFW Initialization
     if( !glfwInit() ){
         fprintf( stderr, "Failed to initialize GLFW\n" );
@@ -82,12 +82,12 @@ int glfwCreateWindow(const char* title = NULL){
 
 
 /// @see glutDisplayFunc
-void glfwDisplayFunc(void (*display)(void)){    
+inline void glfwDisplayFunc(void (*display)(void)){    
     _display = display;
 }
 
 /// @see glutMainLoop
-void glfwMainLoop(){
+inline void glfwMainLoop(){
     assert(_display!=NULL);
     
     /// Render loop & keyboard input
@@ -101,7 +101,7 @@ void glfwMainLoop(){
 }
 
 /// @todo document texture loading 
-GLuint load_texture_targa(const std::string& path){
+inline GLuint load_texture_targa(const std::string& path){
     // Create one OpenGL texture
     GLuint textureID;
     glGenTextures(ONE, &textureID);
@@ -125,7 +125,7 @@ GLuint load_texture_targa(const std::string& path){
 
 
 /// @see http://r3dux.org/2012/07/a-simple-glfw-fps-counter/
-float update_title_fps(std::string theWindowTitle = "NONE", float theTimeInterval = 1.0)
+inline float update_title_fps(std::string theWindowTitle = "NONE", float theTimeInterval = 1.0)
 {
     // Static values which only get initialised the first time the function runs
     static float t0Value       = glfwGetTime(); // Set the initial time to now
