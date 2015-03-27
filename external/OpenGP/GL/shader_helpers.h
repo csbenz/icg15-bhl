@@ -11,7 +11,7 @@
 namespace opengp{
 
 /// Compiles the vertex, geometry and fragment shaders stored in the given strings
-GLuint compile_shaders(const char * vshader, 
+inline GLuint compile_shaders(const char * vshader, 
                        const char * fshader, 
                        const char * gshader = NULL, 
                        const char* tcshader=NULL, 
@@ -170,7 +170,7 @@ GLuint compile_shaders(const char * vshader,
 
 
 /// Compiles the vertex, geometry and fragment shaders using file path
-GLuint load_shaders(const char * vertex_file_path, const char * fragment_file_path, const char * geometry_file_path = NULL) {
+inline GLuint load_shaders(const char * vertex_file_path, const char * fragment_file_path, const char * geometry_file_path = NULL) {
     const int SHADER_LOAD_FAILED = 0; 
 
     std::string VertexShaderCode, FragmentShaderCode, GeometryShaderCode;
@@ -216,7 +216,11 @@ GLuint load_shaders(const char * vertex_file_path, const char * fragment_file_pa
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
     char const * GeometrySourcePointer = NULL;
     if(geometry_file_path != NULL) GeometrySourcePointer = GeometryShaderCode.c_str();
-    return compile_shaders(VertexSourcePointer, FragmentSourcePointer, GeometrySourcePointer);
+    
+    int status = compile_shaders(VertexSourcePointer, FragmentSourcePointer, GeometrySourcePointer);
+    if(status == SHADER_LOAD_FAILED)
+        printf("Failed linking:\n  vshader: %s\n  fshader: %s\n  gshader: %s\n", vertex_file_path, fragment_file_path, geometry_file_path);
+    return status;
 }
 
 } //< opengp::
