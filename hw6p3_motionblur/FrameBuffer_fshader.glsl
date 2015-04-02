@@ -9,6 +9,21 @@ void main() {
     /// TODO: use a constant number of samples for integral (what happens if you take too few?)
     /// HINT: you can scale the velocity vector to make the motion blur effect more prominent
     /// HINT: to debug integration don't use the velocityTex, simply assume velocity is constant, e.g. vec2(1,0)
-    color = texture(colorTex, uv);
+
+    const int n_samples = 100;
+    const float scale = 1.0f;
+
+
+    vec2 velocity = texture(velocityTex, uv).xy * scale;
+
+    vec4 tot_color = vec4(0);
+
+    for (int i = 1; i <= n_samples; i++) {
+        tot_color += texture(colorTex, uv + float(i)/n_samples * velocity);
+
+    }
+
+    color = tot_color / n_samples;
+
 }
 

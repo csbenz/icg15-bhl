@@ -35,7 +35,7 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    int init(bool use_interpolation = false) {        
+    int init(bool use_interpolation = false) {
         ///--- Create color attachment
         {
             glGenTextures(1, &_color_tex);

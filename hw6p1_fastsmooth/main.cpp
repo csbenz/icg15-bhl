@@ -10,6 +10,7 @@ Cube cube;
 Quad quad;
 
 FrameBuffer fb(width, height);
+FrameBuffer fb_filter(width, height);
 ScreenQuad squad;
 
 void init(){
@@ -17,12 +18,13 @@ void init(){
     glEnable(GL_DEPTH_TEST);
     cube.init();
     quad.init();
-    GLuint fb_tex = fb.init();
-    squad.init(fb_tex);
+    GLuint tex_scene = fb.init();
+    GLuint tex_filter = fb_filter.init();
+    squad.init(tex_scene, tex_filter);
 }
 
 void display(){ 
-    opengp::update_title_fps("FrameBuffer");   
+    opengp::update_title_fps("FrameBuffer");
     glViewport(0,0,width,height);
     
     ///--- Setup view-projection matrix
@@ -33,25 +35,52 @@ void display(){
     vec3 cam_up(0.0f, 0.0f, 1.0f);
     mat4 view = Eigen::lookAt(cam_pos, cam_look, cam_up);
     mat4 VP = projection * view;
-    
+
     ///--- Render to FB
     fb.bind();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         cube.draw(VP, glfwGetTime());
         quad.draw(VP);
     fb.unbind();
-    // fb.display_color_attachment("FB - Color"); ///< debug
+
+    // Stocking to temp_tex
+    fb_filter.bind();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        squad.draw(0);
+    fb_filter.unbind();
 
     ///--- Render to Window
     glViewport(0, 0, width, height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    squad.draw();
+    squad.draw(1);
+}
+void keyboard(int key, int action){
+    if(action != GLFW_RELEASE) return; ///< only act on release
+    switch(key){
+        case '1':
+            squad.changeMode(0);
+            std::cout << "BRUTEFORCE" << std::endl << std::flush;
+            break;
+        case '2':
+            squad.changeMode(1);
+            std::cout << "OPTIMIZED" << std::endl << std::flush;
+            break;
+        case 'Q':
+            squad.decStd();
+            break;
+        case 'W':
+            squad.incStd();
+            break;
+        default:
+            break;
+    }
 }
 
 int main(int, char**){
     glfwInitWindowSize(width, height);
     glfwCreateWindow();
     glfwDisplayFunc(display);
+    glfwSetKeyCallback(keyboard);
     init();
     glfwSwapInterval(0); ///< disable VSYNC (allows framerate>30)
     glfwMainLoop();
