@@ -41,12 +41,12 @@ vec2 line_circle_intersect (vec3 p, vec3 ray, float radius){
 
 /// Phase function - Mie scattering
 float F_mie(float theta){
-    return 0;
+    return 0.0;
 }
 
 /// Phase function - Rayleigh scattering
 float F_ray(float theta){ 
-    return 0;
+    return 0.0;
 }
 
 
