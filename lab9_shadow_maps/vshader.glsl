@@ -13,7 +13,7 @@ out vec4 shadow_coord;
 void main() {
     n = mat3(model) * vnormal;
 
-    shadow_coord = depth_vp_offset * model*vec4(vpoint,1.0);
+    shadow_coord = depth_vp_offset * model * vec4(vpoint,1.0);
 
 
     /* TODO: Transform and projection the point into the shadow map, xy should

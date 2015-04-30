@@ -1,4 +1,4 @@
-#version 400
+#version 330 core
 
 uniform mat4 depth_vp;
 uniform mat4 model;
@@ -6,5 +6,5 @@ uniform mat4 model;
 in vec3 vpoint;
 
 void main() {
-    gl_Position = depth_vp * model* vec4(vpoint,1);
+    gl_Position = depth_vp * model * vec4(vpoint,1);
 }

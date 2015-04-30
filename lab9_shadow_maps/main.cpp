@@ -9,8 +9,8 @@
 TwBar *bar;
 #endif
 
-int window_width = 800;
-int window_height = 600;
+int window_width = 1024;
+int window_height = 768;
 
 ShadowBuffer sb;  // FBO for shadow map generation
 
@@ -33,7 +33,7 @@ mat4 offset_matrix;  // Affine transformation to map components from [-1, 1] to 
 
 
 // TODO: Set the bias (or use AntTweakBar to modify it during runtime).
-float bias = 0.1f;
+float bias = 0.05f;
 
 #ifdef WITH_ANTTWEAKBAR
 bool show_light_depth = false;
@@ -67,8 +67,8 @@ mat4 OrthographicProjection(float left, float right, float bottom, float top, fl
 }
 
 void init() {
-  light_dir = vec3(2.0, 4.0, -1.0);
-  light_dir.normalize();
+    light_dir = vec3(2.0, 4.0, -1.0);
+    light_dir.normalize();
 
 #ifdef WITH_ANTTWEAKBAR
     TwInit(TW_OPENGL_CORE, NULL);
@@ -86,7 +86,6 @@ void init() {
     glfwSetKeyCallback((GLFWkeyfun)TwEventKeyGLFW);
     glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
 #endif
-
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -121,7 +120,7 @@ void init() {
     // Use orthographic projection for directional light.
     // Define frustum that tightly encloses the rendered scene.
     // (The rendered scene lives approximatly in a cube from [-1, -1, 1] to [1, 1, -1].)
-    light_projection = OrthographicProjection(-1.5,1.5,-1.5,1.5,0,1.5);
+    light_projection = OrthographicProjection(-1.5,1.5,-1.5,1.5,-0.5,2.5);
 
     // Matrix that can be used to move a point's components from [-1, 1] to [0, 1].
     offset_matrix << 0.5f, 0.0f, 0.0f, 0.5f,
@@ -138,20 +137,20 @@ void init() {
 
 void display() {
     glUseProgram(shadow_pid);
+    //=== BIND
     sb.bind();
 
     // TODO: Setup light view matrix. You can use the lookAt function.
-    mat4 light_view = Eigen::lookAt(light_dir
-,vec3(0,0,0),vec3(0,1,0));// mat4::Zero(4, 4);
+    mat4 light_view = Eigen::lookAt(light_dir,vec3(0,0,0),vec3(0,1,0));// mat4::Zero(4, 4);
 
     mat4 depth_vp = light_projection * light_view;
     glUniformMatrix4fv(glGetUniformLocation(shadow_pid, "depth_vp"), 1, GL_FALSE, depth_vp.data());
-
 
     glClear(GL_DEPTH_BUFFER_BIT);
     ground_floor.draw(shadow_pid);
     tangle_cube.draw(shadow_pid);
     sb.unbind();
+    //=== UNBIND
 
     glUseProgram(default_pid);
     glUniform3fv(glGetUniformLocation(default_pid, "light_dir"), 1, light_dir.data());
@@ -161,7 +160,6 @@ void display() {
     glUniformMatrix4fv(glGetUniformLocation(default_pid, "depth_vp_offset"), 1, GL_FALSE, depth_vp_offset.data());
 
     glUniform1f(glGetUniformLocation(default_pid, "bias"), bias);
-
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depth_tex);

@@ -1,3 +1,5 @@
-#version 400
+#version 330 core
 
-void main() {}
+void main()
+{
+}
