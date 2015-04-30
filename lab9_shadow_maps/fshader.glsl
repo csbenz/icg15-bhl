@@ -45,9 +45,23 @@ void main() {
     float shade = ambient_light + max(dot(normalize(n), normalize(light_dir)), 0.0);
 
     float shadow = 1.0;  // shading factor from the shadow (1.0 = no shadow, 0.0 = all dark)
+    vec2 dimension = textureSize(shadow_map,0);
+    vec4 new_shadow_coord = shadow_coord * vec4(dimension.x,dimension.y,1,1);
+
+    float col = texture(shadow_map,shadow_coord.xy).r;
+    if (col < shadow_coord.z-bias){
+       // shadow = 0.2;
+    }
     // TODO: Shadow Mapping
     // 1. Do perspective division of 'shadow_coord'.
     // 2. Get the sample of the shadow map at 'shadow_coord.xy'.
+    float spread = 200;
+    for (int i=0;i<16;i++){
+      if ( texture( shadow_map, shadow_coord.xy + poisson_disk[i]/spread).r  <  shadow_coord.z - bias ){
+        shadow -= (1.0/20.0);
+      }
+    }
+
     // 3. Compare the sample with the distance of the current pixel to the light (stored in 'shadow_coord.z').
     // 4. Apply biasing by shortening the distance a little bit (you can use the uniform 'bias').
     // 5. You can to PCF if you want to (16 samples within a a circle are stored in 'poisson_disk', you can use those'),
@@ -59,4 +73,5 @@ void main() {
     } else {
         color = shadow * shade * texture(tex, uv).rgb;
     }
+    //color = vec3(texture(shadow_map,uv).r);
 }

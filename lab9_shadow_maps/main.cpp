@@ -9,8 +9,8 @@
 TwBar *bar;
 #endif
 
-int window_width = 1024;
-int window_height = 786;
+int window_width = 800;
+int window_height = 600;
 
 ShadowBuffer sb;  // FBO for shadow map generation
 
@@ -33,7 +33,7 @@ mat4 offset_matrix;  // Affine transformation to map components from [-1, 1] to 
 
 
 // TODO: Set the bias (or use AntTweakBar to modify it during runtime).
-float bias = 0.0f;
+float bias = 0.1f;
 
 #ifdef WITH_ANTTWEAKBAR
 bool show_light_depth = false;
@@ -50,6 +50,21 @@ void DepthDisplayGet(void *value, void *) {
     *(bool*)value = show_light_depth;
 }
 #endif
+
+mat4 OrthographicProjection(float left, float right, float bottom, float top, float near, float far){
+    assert(right > left);
+    assert(far > near);
+    assert(top > bottom);
+    mat4 ortho = mat4::Zero();
+    ortho(0, 0) = 2.0f / (right - left);
+    ortho(1, 1) = 2.0f / (top - bottom);
+    ortho(2, 2) = -2.0f / (far - near);
+    ortho(3, 3) = 1.0f;
+    ortho(0, 3) = -(right + left) / (right - left);
+    ortho(1, 3) = -(top + bottom) / (top - bottom);
+    ortho(2, 3) = -(far + near) / (far - near);
+    return ortho;
+}
 
 void init() {
   light_dir = vec3(2.0, 4.0, -1.0);
@@ -106,7 +121,7 @@ void init() {
     // Use orthographic projection for directional light.
     // Define frustum that tightly encloses the rendered scene.
     // (The rendered scene lives approximatly in a cube from [-1, -1, 1] to [1, 1, -1].)
-    light_projection = mat4::Zero(4, 4);
+    light_projection = OrthographicProjection(-1.5,1.5,-1.5,1.5,0,1.5);
 
     // Matrix that can be used to move a point's components from [-1, 1] to [0, 1].
     offset_matrix << 0.5f, 0.0f, 0.0f, 0.5f,
@@ -126,7 +141,8 @@ void display() {
     sb.bind();
 
     // TODO: Setup light view matrix. You can use the lookAt function.
-    mat4 light_view = mat4::Zero(4, 4);
+    mat4 light_view = Eigen::lookAt(light_dir
+,vec3(0,0,0),vec3(0,1,0));// mat4::Zero(4, 4);
 
     mat4 depth_vp = light_projection * light_view;
     glUniformMatrix4fv(glGetUniformLocation(shadow_pid, "depth_vp"), 1, GL_FALSE, depth_vp.data());

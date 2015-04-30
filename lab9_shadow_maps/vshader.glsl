@@ -13,7 +13,11 @@ out vec4 shadow_coord;
 void main() {
     n = mat3(model) * vnormal;
 
-    shadow_coord = /* TODO: Transform and projection the point into the shadow map, xy should be uv coordinates and z the depth value you want to compare to */ vec4(vpoint, 1.0);
+    shadow_coord = depth_vp_offset * model*vec4(vpoint,1.0);
+
+
+    /* TODO: Transform and projection the point into the shadow map, xy should
+        be uv coordinates and z the depth value you want to compare to */
 
     gl_Position = projection * view * model * vec4(vpoint, 1.0);
     uv = vtexcoord;

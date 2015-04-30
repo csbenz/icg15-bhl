@@ -6,5 +6,5 @@ uniform mat4 model;
 in vec3 vpoint;
 
 void main() {
-    gl_Position = /* TODO: Transform and projection the point into light's NDC */ vec4(vpoint, 1.0);
+    gl_Position = depth_vp * model* vec4(vpoint,1);
 }
